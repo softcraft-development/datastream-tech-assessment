@@ -9,7 +9,12 @@ describe("/+page.svelte", () => {
       render(Page)
     })
 
-    it("should display the heading", async () => {
+    it("displays the heading", async () => {
+      const heading = page.getByRole("heading", { level: 1 })
+      expect(heading.element()).toBeVisible()
+    })
+
+    it("displays the file input", async () => {
       const heading = page.getByRole("heading", { level: 1 })
       expect(heading.element()).toBeVisible()
     })
