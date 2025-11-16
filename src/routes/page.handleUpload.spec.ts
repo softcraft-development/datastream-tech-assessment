@@ -5,29 +5,56 @@ import { handleUpload } from "./page.handleUpload"
 describe("handleUpload", () => {
   describe("for a file upload event", () => {
     let files: () => FileList | null
-    let result: () => void
+    let result: () => Promise<void>
 
     beforeEach(() => {
-      files = () => null
-      result = memo(() => handleUpload(files()))
+      result = memo(async () => {
+        await handleUpload(files())
+      })
     })
 
-    describe("with a single CSV file", () => {
-      let data: () => string[][]
-      let fileContent: () => string
+    describe("with no file", () => {
       beforeEach(() => {
-        data = memo(() => [
-          ["ResultValue", "CharacteristicName", '"Temperature, water"'],
-        ])
-        fileContent = memo(() => data().map(line => line.join(",")).join("\n"))
+        files = () => null
+      })
+
+      it("throws an error", () => {
+        expect(result()).rejects.toThrow()
+      })
+    })
+
+    describe("with a single file", () => {
+      let fileContent: () => BlobPart[]
+      beforeEach(() => {
         files = memo(() => {
           // File[] and FileList aren't quite the same thing, but they are compatible enough for this test.
-          return [new File([fileContent()], "file.csv", { type: "text/csv" })] as unknown as FileList
+          return [new File(fileContent(), "file.csv", { type: "text/csv" })] as unknown as FileList
         })
       })
 
-      it("does not throw", () => {
-        expect(() => result()).not.toThrow()
+      describe("that is a valid CSV", () => {
+        let data: () => string[][]
+        beforeEach(() => {
+          data = memo(() => [
+            ["ResultValue", "CharacteristicName", '"Temperature, water"'],
+          ])
+          fileContent = memo(() => [data().map(line => line.join(",")).join("\n")])
+
+        })
+
+        it("does not throw", () => {
+          expect(result()).resolves.not.toThrow()
+        })
+      })
+
+      describe("that is not a CSV", () => {
+        beforeEach(() => {
+          fileContent = memo(() => [JSON.stringify({ message: "Not a CSV" })])
+        })
+
+        it("throws an error", () => {
+          expect(result()).rejects.toThrow()
+        })
       })
     })
   })

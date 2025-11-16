@@ -2,9 +2,9 @@
   import type { ChangeEventHandler } from "svelte/elements"
   import { handleUpload } from "./page.handleUpload"
 
-  const onchange: ChangeEventHandler<HTMLInputElement> = (event) => {
+  const onchange: ChangeEventHandler<HTMLInputElement> = async (event) => {
     event.preventDefault()
-    handleUpload(event.currentTarget.files)
+    const results = await handleUpload(event.currentTarget.files)
   }
 </script>
 
