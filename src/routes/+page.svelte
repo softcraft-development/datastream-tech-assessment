@@ -1,7 +1,11 @@
 <script lang="ts">
   import type { ChangeEventHandler } from "svelte/elements"
+  import { handleUpload } from "./page.handleUpload"
 
-  const onchange: ChangeEventHandler<HTMLInputElement> = () => {}
+  const onchange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    event.preventDefault()
+    handleUpload(event.currentTarget.files)
+  }
 </script>
 
 <h1>DataStream Technical Assessment</h1>
