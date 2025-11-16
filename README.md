@@ -8,9 +8,9 @@ Technical assessments end up being a mix of conflicting interests.
 I've chosen a certain balance of these:
 
 1. YAGNI & KISS: In general, don't add features that are not required.
-  * But also, go the extra mile when it's useful for the following reasons.
+    * But also, go the extra mile when it's useful for the following reasons.
 2. UX: Demonstrate an understanding of what helps the user achieve their goal.
-  * For example: validation messages on bad input CSVs.
+    * For example: validation messages on bad input CSVs.
 3. Reliability: Be sure to address some of the more major problems that could occur.
 4. Testing: Demonstrate how we can _prove_ that the system operates like we're claiming.
 5. Svelte Learning: Demonstrate the ability to learn a new tech on-the-fly, and adapt accordingly.
@@ -32,9 +32,10 @@ SvelteKit auto-generated a lot of the initial boilerplate; see the first commit.
 ## Testing Techniques
 Note that my tests/specs make heavy use of `memo`.
 This allows all of my test setup to be:
-  * Dynamically derived from other test state.
-  * Modified at any point in the test, independent of the order of declaration.
-  * Lazily created.
+
+* Dynamically derived from other test state.
+* Modified at any point in the test, independent of the order of declaration.
+* Lazily created.
 
 This gives me a lot of power to iteratively expand and evolve test scenarios,
 from more generalized to more specific,
