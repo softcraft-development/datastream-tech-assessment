@@ -1,3 +1,46 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
+
+
+html {
+  @apply bg-gray-50 text-gray-900 antialiased;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  @apply m-0 p-8 max-w-3xl mx-auto;
+}
+
+h1 {
+  @apply text-4xl font-bold mt-8 mb-4 leading-tight;
+}
+
+h2 {
+  @apply text-3xl font-semibold mt-6 mb-3;
+}
+
+h3 {
+  @apply text-2xl font-semibold mt-4 mb-2;
+}
+
+ul,
+ol {
+  @apply mt-4 mb-6 pl-6;
+}
+
+li {
+  @apply list-disc;
+}
+
+a {
+  @apply text-blue-600 underline hover:text-blue-500;
+}
+
+form {
+  @apply flex flex-col gap-4 mt-4;
+}
+
+button {
+  @apply self-start bg-blue-600 text-white font-semibold px-4 py-2 rounded shadow hover:bg-blue-500 active:bg-blue-700;
+}
