@@ -3,6 +3,7 @@ import { memo } from "radash"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { handleUpload, maximumBytes } from "./page.handleUpload"
 
+// Same module-level mocking considerations here as in `page.svelte.spec.ts`
 vi.mock("$lib/averageWaterTemperature.ts", async () => {
   const actual = await vi.importActual("$lib/averageWaterTemperature.ts")
   return {
@@ -17,12 +18,21 @@ let fileList: () => FileList | null
 let result: () => Promise<Results>
 
 beforeEach(() => {
-  result = memo(() => handleUpload(fileList()))
   vi.resetAllMocks()
+  // We're intentionally logging errors to console internally,
+  // and intentionally generating these errors in the test.
+  // We don't want to clutter the output with logging for intentional & desirable errors,
+  // so we'll suppress them here.
+  // We could even write tests to prove this occurred as intended.
   vi.spyOn(console, "error").mockImplementation(() => { })
+  result = memo(() => handleUpload(fileList()))
 })
 
-
+// Note that these are nearly identical to the ones `averageWaterTemperature.spec.ts`.
+// The difference is that `result` is async here,
+// so the tests need to be too.
+// In a perfect world we'd have tests that handle both,
+// but KISS for now by copying and modifying them.
 function itReportsErrors() {
   it("reports errors", async () => {
     expect((await result()).errors).not.toEqual([])
@@ -74,6 +84,8 @@ describe("with a file", () => {
 
   describe("that is too large", () => {
     beforeEach(() => {
+      // Note that we're not actually generating large data in our test,
+      // just triggering the max size lockout.
       fileContent = memo(() => [])
       vi.spyOn(File.prototype, "size", "get").mockReturnValue(maximumBytes + 1)
     })
@@ -99,13 +111,17 @@ describe("with a file", () => {
         [characteristicColumn, resultColumn],
       ])
       fileContent = memo(() => {
+        // Very quick and dirty implementation of CSV generation.
+        // An actual library would be better here, but we'll KISS for now.
         return [
           rawData().map(row => row.join(",")).join("\n")
         ]
       })
+      // Note that `handleUpload` doesn't care what _correct_ `Results` are,
+      // just that they're _valid_.
       vi.mocked(averageWaterTemperature).mockImplementation((): Results => ({
         average: 3,
-        columns: {},
+        schema: {},
         count: 5,
         errors: [],
         sum: 7,
@@ -116,10 +132,19 @@ describe("with a file", () => {
     function itProcessesTheFile() {
       it("processes the CSV data", async () => {
         await result()
+        // This is what lets us avoid rewriting all of tests for valid data;
+        // We assume `averageWaterTemperature.spec.ts` covers everything.
         expect(averageWaterTemperature).toHaveBeenCalledExactlyOnceWith(rawData())
       })
     }
 
+    // Note that we're not testing that `average` is correct,
+    // but we _are_ testing that the errors and warnings are as we expect.
+    // That's because `handleUpload` itself introduces _additional_ errors/warnings
+    // that are not covered by `averageWaterTemperature.spec.ts`;
+    // we need to test this.
+    // Also note: we're not testing for the actual error messages (because KISS),
+    // but we could.
     itProcessesTheFile()
     itReportsNoErrors()
     itReportsNoWarnings()

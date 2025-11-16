@@ -9,6 +9,7 @@ beforeEach(() => {
   result = memo(() => averageWaterTemperature(rawData()))
 })
 
+// DRY up your tests too.
 function itHasNoAverage() {
   it("has no average", () => {
     expect(result().average).toBeUndefined()
