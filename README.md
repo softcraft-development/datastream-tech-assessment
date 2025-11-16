@@ -7,7 +7,7 @@ As requested, I've built a SvelteKit-based app for processing CSVs and calculati
 Technical assessments end up being a mix of conflicting interests.
 I've chosen a certain balance of these:
 
-1. YAGNI & KISS: In general, don't add features that are not required.
+1. [YAGNI](https://en.wikipedia.org/wiki/You_aren't_gonna_need_it) & [KISS](https://en.wikipedia.org/wiki/KISS_principle): In general, don't add features that are not required.
     * But also, go the extra mile when it's useful for the following reasons.
 2. UX: Demonstrate an understanding of what helps the user achieve their goal.
     * For example: validation messages on bad input CSVs.

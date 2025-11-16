@@ -35,7 +35,7 @@ export async function handleUpload(files: FileList | null): Promise<Results> {
   // This is solvable, with enough effort.
   // In the meantime, we'll choose a maximumBytes that accepts some of the supplied test data,
   // but not others -- and thus demonstrates that it can gracefully handle large data.
-  // My own Chrome choked on `doi.org_10.25976_lk09-0b65.csv` with an out-of-memory error.
+  // Without the size cap, my own Firefox choked on `doi.org_10.25976_lk09-0b65.csv` with an out-of-memory error.
   if (file.size > maximumBytes) {
     return {
       ...begin(),
