@@ -7,11 +7,18 @@
 
   const onchange: ChangeEventHandler<HTMLInputElement> = async (event) => {
     event.preventDefault()
+    // We'll push as much logic as possible out to `handleUpload`.
+    // Theoretically we could even pass it the entire `event`,
+    // but that ended up being more trouble than it was worth in the tests.
     results = await handleUpload(event.currentTarget.files)
   }
 </script>
 
-<h1>DataStream Technical Assessment</h1>
+<svelte:head>
+  <title>DataStream Technical Assessment | Craig Walker</title>
+</svelte:head>
+
+<h1 data-testid="title">DataStream Technical Assessment</h1>
 <h3>Craig Walker, November 2025</h3>
 <section class="mt-12">
   <h2>Data Source</h2>
